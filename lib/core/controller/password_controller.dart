@@ -9,7 +9,7 @@ class PasswordController {
     } else if (!RegExp(r'[a-zA-Z]').hasMatch(password)) {
       return "En az 1 harf içermeli";
     } else {
-      return "Şifre kabul edildi ✅";
+      return "Şifre kabul edilebilir ✅";
     }
   }
 }

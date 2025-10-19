@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:login_with_firebase/core/auth/auth_service.dart';
 import 'package:login_with_firebase/core/controller/password_controller.dart';
+import 'package:login_with_firebase/main.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -9,18 +11,55 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final _auth = AuthService();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  String passwordMessage = ''; // burası uyarı metnimiz
-
+  String passwordMessage = ''; // Şifre kontrol mesajı
   final PasswordController passwordChecker = PasswordController();
+  bool _isSecure = false;
 
-  void _validatePassword() {
-    String password = passwordController.text;
-    String result = passwordChecker.passwordControl(password);
+  void isSecure() {
+    _isSecure = !_isSecure;
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _signUp() async {
+    String result = passwordChecker.passwordControl(passwordController.text);
 
     setState(() {
-      passwordMessage = result; // uyarı metnini güncelle
+      passwordMessage = result;
+    });
+
+    if (result != "Şifre kabul edilebilir ✅") return;
+
+    final user = await _auth.createUserWithEmailandPassword(
+      emailController.text.trim(),
+      passwordController.text.trim(),
+    );
+
+    if (user != null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Başarılı! 🎉")));
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MyHomePage(title: emailController.text),
+        ),
+      );
+    }
+  }
+
+  void _onPasswordChanged(String value) {
+    String result = passwordChecker.passwordControl(value);
+    setState(() {
+      passwordMessage = result;
     });
   }
 
@@ -31,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
         child: Card(
           child: SizedBox(
             width: 400,
-            height: 320,
+            height: 360,
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
@@ -51,16 +90,24 @@ class _LoginPageState extends State<LoginPage> {
                   TextField(
                     controller: passwordController,
                     obscureText: true,
+                    onChanged: _onPasswordChanged,
                     decoration: InputDecoration(
                       hintText: "Enter your password",
                       border: const OutlineInputBorder(),
-                      errorText: passwordMessage.isNotEmpty
+                      errorText:
+                          passwordMessage.isNotEmpty &&
+                              passwordMessage != "Şifre kabul edilebilir ✅"
                           ? passwordMessage
                           : null,
                     ),
                   ),
+                  if (passwordMessage == "Şifre kabul edilebilir ✅")
+                    Text(
+                      passwordMessage,
+                      style: const TextStyle(color: Colors.green),
+                    ),
                   ElevatedButton(
-                    onPressed: _validatePassword,
+                    onPressed: _signUp,
                     child: const Text("Register"),
                   ),
                 ],
@@ -68,29 +115,6 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class InputField extends StatelessWidget {
-  const InputField({
-    super.key,
-    required this.controller,
-    required this.hintText,
-  });
-
-  final TextEditingController controller;
-  final String hintText;
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-
-      decoration: InputDecoration(
-        hintText: hintText,
-        border: OutlineInputBorder(),
       ),
     );
   }

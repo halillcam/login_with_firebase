@@ -1,7 +1,25 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:login_with_firebase/core/views/login_page.dart';
+import 'package:login_with_firebase/core/auth/views/login_page.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (kIsWeb) {
+    await Firebase.initializeApp(
+      options: const FirebaseOptions(
+        apiKey: "AIzaSyCHKnz4svlMJ0DiBECDrsgWyLYltUUh3X8",
+        authDomain: "basic-login-527b6.firebaseapp.com",
+        projectId: "basic-login-527b6",
+        storageBucket: "basic-login-527b6.firebasestorage.app",
+        messagingSenderId: "679009176627",
+        appId: "1:679009176627:web:e9a1a649e6f04122e52746",
+      ),
+    );
+  } else {
+    await Firebase.initializeApp();
+  }
+
   runApp(const MyApp());
 }
 
