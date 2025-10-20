@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:login_with_firebase/core/auth/auth_service.dart';
-import 'package:login_with_firebase/core/controller/password_controller.dart';
+import 'package:login_with_firebase/core/auth/views/register_page.dart';
+import 'package:login_with_firebase/core/widgets/input_field.dart';
 import 'package:login_with_firebase/main.dart';
 
 class LoginPage extends StatefulWidget {
@@ -11,56 +12,41 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _auth = AuthService();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  String passwordMessage = ''; // Şifre kontrol mesajı
-  final PasswordController passwordChecker = PasswordController();
-  bool _isSecure = false;
+  late final AuthService _auth = AuthService();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
-  void isSecure() {
-    _isSecure = !_isSecure;
+  // login
+
+  Future<void> _login() async {
+    final user = await _auth.loginUserWithEmailandPassword(
+      _emailController.text,
+      _passwordController.text,
+    );
+    if (user != null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Successful")));
+      await Future.delayed(Duration(seconds: 2));
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MyHomePage(title: _emailController.text),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Error")));
+      await Future.delayed(Duration(seconds: 2));
+    }
   }
 
   @override
   void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
     super.dispose();
-  }
-
-  Future<void> _signUp() async {
-    String result = passwordChecker.passwordControl(passwordController.text);
-
-    setState(() {
-      passwordMessage = result;
-    });
-
-    if (result != "Şifre kabul edilebilir ✅") return;
-
-    final user = await _auth.createUserWithEmailandPassword(
-      emailController.text.trim(),
-      passwordController.text.trim(),
-    );
-
-    if (user != null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("Başarılı! 🎉")));
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MyHomePage(title: emailController.text),
-        ),
-      );
-    }
-  }
-
-  void _onPasswordChanged(String value) {
-    String result = passwordChecker.passwordControl(value);
-    setState(() {
-      passwordMessage = result;
-    });
+    _emailController.dispose();
+    _passwordController.dispose();
   }
 
   @override
@@ -76,39 +62,55 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  const Text(
-                    "Register Page",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  const Text("Login Page"),
+                  InputField(
+                    hint: "Enter e-mail",
+                    label: "e-mail",
+                    controller: _emailController,
                   ),
-                  TextField(
-                    controller: emailController,
-                    decoration: const InputDecoration(
-                      hintText: "Enter your e-mail",
-                      border: OutlineInputBorder(),
+                  InputField(
+                    hint: "Enter Password",
+                    label: "Password",
+                    controller: _passwordController,
+                    isPassword: true,
+                  ),
+                  SizedBox(
+                    width: 400,
+                    height: 20,
+                    child: Row(
+                      children: [
+                        Text("Üye değilmisiniz ? "),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => RegisterPage(),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            "Üye olun",
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  TextField(
-                    controller: passwordController,
-                    obscureText: true,
-                    onChanged: _onPasswordChanged,
-                    decoration: InputDecoration(
-                      hintText: "Enter your password",
-                      border: const OutlineInputBorder(),
-                      errorText:
-                          passwordMessage.isNotEmpty &&
-                              passwordMessage != "Şifre kabul edilebilir ✅"
-                          ? passwordMessage
-                          : null,
-                    ),
-                  ),
-                  if (passwordMessage == "Şifre kabul edilebilir ✅")
-                    Text(
-                      passwordMessage,
-                      style: const TextStyle(color: Colors.green),
-                    ),
                   ElevatedButton(
-                    onPressed: _signUp,
-                    child: const Text("Register"),
+                    onPressed: () {
+                      _login();
+                    },
+                    child: Text(
+                      "Login",
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
                   ),
                 ],
               ),
