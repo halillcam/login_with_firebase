@@ -8,10 +8,10 @@ class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
   @override
-  State<RegisterPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<RegisterPage> {
+class _RegisterPageState extends State<RegisterPage> {
   final _auth = AuthService();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -21,7 +21,9 @@ class _LoginPageState extends State<RegisterPage> {
   bool _isSecure = false;
 
   void isSecure() {
-    _isSecure = !_isSecure;
+    setState(() {
+      _isSecure = !_isSecure;
+    });
   }
 
   @override
@@ -29,6 +31,7 @@ class _LoginPageState extends State<RegisterPage> {
     _emailController.dispose();
     _passwordController.dispose();
     _nameController.dispose();
+
     super.dispose();
   }
 
@@ -50,10 +53,10 @@ class _LoginPageState extends State<RegisterPage> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text("Successful 🎉")));
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
-      );
+      // Kayıt başarılıysa RegisterPage'i kapat; altta Wrapper authState'i görüp UserPage'e geçecek.
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
     }
   }
 

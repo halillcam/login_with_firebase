@@ -14,6 +14,8 @@ class AuthService {
         password: password,
       );
       return cred.user;
+    } on FirebaseAuthException catch (e) {
+      exceptionHandler(e.code);
     } catch (e) {
       log("Hata $e");
     }
@@ -30,6 +32,8 @@ class AuthService {
         password: password,
       );
       return cred.user;
+    } on FirebaseAuthException catch (e) {
+      exceptionHandler(e.code);
     } catch (e) {
       log("Hata $e");
     }
@@ -42,5 +46,18 @@ class AuthService {
     } catch (e) {
       log("hata $e");
     }
+  }
+}
+
+exceptionHandler(String code) {
+  switch (code) {
+    case "invaild-credential":
+      log("giris bilgileriniz gecersiz");
+    case "weak-password":
+      log("zayif sifre");
+    case "email-already-in-use":
+      log("kullanici zaten kayitli");
+    default:
+      log("hata");
   }
 }

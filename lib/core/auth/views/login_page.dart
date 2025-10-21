@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:login_with_firebase/core/auth/auth_service.dart';
 import 'package:login_with_firebase/core/auth/views/register_page.dart';
 import 'package:login_with_firebase/core/widgets/input_field.dart';
-import 'package:login_with_firebase/main.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -27,18 +26,11 @@ class _LoginPageState extends State<LoginPage> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text("Successful")));
-      await Future.delayed(Duration(seconds: 2));
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MyHomePage(title: _emailController.text),
-        ),
-      );
     } else {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text("Error")));
-      await Future.delayed(Duration(seconds: 2));
+      // await Future.delayed(Duration(seconds: 2)); // opsiyonel
     }
   }
 
