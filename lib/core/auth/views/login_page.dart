@@ -14,6 +14,7 @@ class _LoginPageState extends State<LoginPage> {
   late final AuthService _auth = AuthService();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
 
   // login
 
@@ -48,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
         child: Card(
           child: SizedBox(
             width: 400,
-            height: 360,
+            height: 380,
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
@@ -104,6 +105,26 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
+                  _isLoading
+                      ? CircularProgressIndicator()
+                      : ElevatedButton(
+                          onPressed: () async {
+                            setState(() {
+                              _isLoading = true;
+                            });
+                            await _auth.loginWithGoogle();
+                            setState(() {
+                              _isLoading = false;
+                            });
+                          },
+                          child: Text(
+                            "Login with Google",
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                        ),
                 ],
               ),
             ),
