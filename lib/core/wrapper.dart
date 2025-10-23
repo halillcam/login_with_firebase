@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:login_with_firebase/core/auth/views/login_page.dart';
 import 'package:login_with_firebase/core/auth/views/user_page.dart';
+import 'package:login_with_firebase/core/auth/views/verification_page.dart';
 
 class Wrapper extends StatelessWidget {
   const Wrapper({super.key});
@@ -20,7 +21,10 @@ class Wrapper extends StatelessWidget {
             if (snapshot.data == null) {
               return const LoginPage();
             } else {
-              return UserPage(userName: "userName");
+              if (snapshot.data?.emailVerified == true) {
+                return UserPage(userName: "userName");
+              }
+              return VerificationPage(user: snapshot.data!);
             }
           }
         },

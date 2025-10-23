@@ -6,6 +6,15 @@ import 'package:google_sign_in/google_sign_in.dart';
 class AuthService {
   final _auth = FirebaseAuth.instance;
 
+  // e-mail verification
+  Future<void> sendEmailVerification() async {
+    try {
+      await _auth.currentUser?.sendEmailVerification();
+    } catch (e) {
+      log("error $e");
+    }
+  }
+
   // google - eski api ile
 
   Future<UserCredential?> loginWithGoogle() async {
