@@ -77,6 +77,16 @@ class AuthService {
       log("hata $e");
     }
   }
+
+  // forgot password
+
+  Future<void> sendPasswordResetLink(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+    } catch (e) {
+      log("hata $e");
+    }
+  }
 }
 
 exceptionHandler(String code) {

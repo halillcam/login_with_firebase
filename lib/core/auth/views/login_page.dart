@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:login_with_firebase/core/auth/auth_service.dart';
+import 'package:login_with_firebase/core/auth/views/forgot_pass.dart';
 import 'package:login_with_firebase/core/auth/views/register_page.dart';
 import 'package:login_with_firebase/core/widgets/input_field.dart';
 
@@ -67,32 +68,19 @@ class _LoginPageState extends State<LoginPage> {
                     controller: _passwordController,
                     isPassword: true,
                   ),
-                  SizedBox(
-                    width: 400,
-                    height: 20,
-                    child: Row(
-                      children: [
-                        Text("Üye değilmisiniz ? "),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => RegisterPage(),
-                              ),
-                            );
-                          },
-                          child: Text(
-                            "Üye olun",
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontStyle: FontStyle.italic,
-                            ),
-                          ),
-                        ),
-                      ],
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ForgotPass()),
+                        );
+                      },
+                      child: Text("I Forgot my Password"),
                     ),
                   ),
+
                   ElevatedButton(
                     onPressed: () {
                       _login();
@@ -125,6 +113,33 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                         ),
+                  SizedBox(
+                    width: 400,
+                    height: 20,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Üye değilmisiniz ? "),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => RegisterPage(),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            "Üye olun",
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
