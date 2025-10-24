@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:login_with_firebase/core/auth/auth_service.dart';
 import 'package:login_with_firebase/core/auth/views/forgot_pass.dart';
+import 'package:login_with_firebase/core/auth/views/phone/phone_auth.dart';
 import 'package:login_with_firebase/core/auth/views/register_page.dart';
 import 'package:login_with_firebase/core/widgets/input_field.dart';
 
@@ -49,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
       body: Center(
         child: Card(
           child: SizedBox(
-            width: 400,
+            width: 450,
             height: 380,
             child: Padding(
               padding: const EdgeInsets.all(20),
@@ -91,6 +92,18 @@ class _LoginPageState extends State<LoginPage> {
                         fontSize: 15,
                         fontStyle: FontStyle.italic,
                       ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => PhoneAuth()),
+                      );
+                    },
+                    child: Text(
+                      "Login with Phone number",
+                      style: TextStyle(fontSize: 15),
                     ),
                   ),
                   _isLoading
