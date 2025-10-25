@@ -34,6 +34,8 @@ class AuthService {
     return null;
   }
 
+  // create user
+
   Future<User?> createUserWithEmailandPassword(
     String email,
     String password,
@@ -52,6 +54,8 @@ class AuthService {
     return null;
   }
 
+  // login
+
   Future<User?> loginUserWithEmailandPassword(
     String email,
     String password,
@@ -69,6 +73,8 @@ class AuthService {
     }
     return null;
   }
+
+  // signOut
 
   Future<void> signOut() async {
     try {
